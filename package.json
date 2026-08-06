@@ -6,6 +6,9 @@
   "bin": {
     "check-md-links": "./index.js"
   },
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "check": "node index.js README.md"
   },
@@ -20,6 +23,14 @@
     "open-source",
     "continuous-integration"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prestavera/check-md-links.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prestavera/check-md-links/issues"
+  },
+  "homepage": "https://github.com/prestavera/check-md-links#readme",
   "author": "Open Source Contributors",
   "license": "MIT"
 }
