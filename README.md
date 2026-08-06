@@ -1,6 +1,7 @@
 # check-md-links
 
 ![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white)
+<img alt="npm version" src="https://img.shields.io/npm/v/check-md-links">
 <a href="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml/badge.svg"></a>
 ![Licence MIT](https://img.shields.io/badge/Licence-MIT-yellow.svg)
 
