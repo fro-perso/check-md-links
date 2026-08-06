@@ -1,0 +1,25 @@
+{
+  "name": "check-md-links",
+  "version": "1.0.0",
+  "description": "CLI sans dépendance pour détecter les liens HTTP et HTTPS cassés dans un fichier Markdown.",
+  "type": "module",
+  "bin": {
+    "check-md-links": "./index.js"
+  },
+  "scripts": {
+    "check": "node index.js README.md"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "markdown",
+    "links",
+    "link-checker",
+    "cli",
+    "open-source",
+    "continuous-integration"
+  ],
+  "author": "Open Source Contributors",
+  "license": "MIT"
+}
