@@ -1,60 +1,65 @@
-# check-md-links
+<p align="center">
+  <img src="assets/check-md-links-social-preview.png" alt="check-md-links — Catch broken Markdown links before users do" width="1200">
+</p>
 
-![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white)
-<img alt="npm version" src="https://img.shields.io/npm/v/check-md-links">
-<a href="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml/badge.svg"></a>
-![Licence MIT](https://img.shields.io/badge/Licence-MIT-yellow.svg)
+<h1 align="center">check-md-links</h1>
 
-## Description
+<p align="center">
+  <strong>A fast, zero-dependency CLI that catches broken links in Markdown files.</strong>
+</p>
 
-`check-md-links` est un petit outil en ligne de commande qui extrait les URL HTTP et HTTPS d’un fichier Markdown, suit leurs redirections et signale celles qui ne répondent pas correctement. Il ne nécessite aucune dépendance externe et s’appuie sur l’API `fetch` native de Node.js.
+<p align="center">
+  <img alt="Node.js 18+" src="https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white">
+  <img alt="npm version" src="https://img.shields.io/npm/v/check-md-links">
+  <a href="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/prestavera/check-md-links/actions/workflows/ci.yml/badge.svg"></a>
+  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+</p>
 
-Chaque requête est annulée après 10 secondes. Le programme renvoie le code de sortie `1` dès qu’au moins un lien est cassé, ce qui le rend adapté aux pipelines d’intégration continue.
+`check-md-links` scans a Markdown file for HTTP and HTTPS URLs, follows redirects, and reports links that fail. It uses the native Node.js `fetch` API and installs with no runtime dependencies.
 
-Prérequis : Node.js 18 ou une version ultérieure.
+## Quick start
 
-## Installation et utilisation
-
-Exécutez le paquet avec `npx` en indiquant le fichier Markdown à analyser :
+Run it directly with `npx`:
 
 ```console
-npx check-md-links docs/guide.md
+npx check-md-links README.md
 ```
 
-Sans argument, `README.md` est utilisé par défaut :
+With no file argument, `README.md` is checked by default:
 
 ```console
 npx check-md-links
 ```
 
-Depuis un clone local du dépôt, aucune installation n’est nécessaire :
+Or install it globally:
 
 ```console
-node index.js README.md
+npm install --global check-md-links
+check-md-links docs/guide.md
 ```
 
-## Exemple de sortie console
+## Why use it?
 
-```text
-🔎 Vérification de 2 lien(s) dans README.md
+- Zero runtime dependencies
+- Follows HTTP redirects
+- Removes duplicate URLs before checking
+- Cancels requests after 10 seconds
+- Returns exit code `1` when a link is broken
+- Works locally and in CI pipelines
 
-✅ https://nodejs.org/
-✅ https://opensource.org/license/mit
+## GitHub Actions
 
-✅ Tous les liens sont valides
-```
-
-Pour un lien inaccessible, la ligne concernée est préfixée par `❌`, un résumé est affiché et la commande se termine avec le code `1`.
-
-## Intégration CI
-
-Le workflow GitHub Actions inclus exécute le contrôle à chaque `push` et pour chaque `pull_request`. Dans un autre pipeline, la commande suivante suffit :
+Add this step to a workflow:
 
 ```yaml
-- name: Vérifier les liens Markdown
-  run: npx check-md-links README.md
+- name: Check Markdown links
+  run: npx --yes check-md-links README.md
 ```
 
-## Licence
+## Requirements
 
-Ce projet est distribué sous licence MIT. Consultez le fichier [LICENSE](LICENSE).
+Node.js 18 or newer.
+
+## License
+
+Released under the [MIT License](LICENSE).
