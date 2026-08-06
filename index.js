@@ -31,4 +31,4 @@ for (const url of urls) {
 }
 
 console.log(`\n${failures ? `❌ ${failures} lien(s) cassé(s)` : '✅ Tous les liens sont valides'}`);
-if (failures) process.exit(1);
+if (failures) process.exitCode = 1;
