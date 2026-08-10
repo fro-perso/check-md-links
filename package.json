@@ -7,10 +7,12 @@
     "check-md-links": "./index.js"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "lib.js"
   ],
   "scripts": {
-    "check": "node index.js README.md"
+    "check": "node index.js README.md",
+    "test": "node --test"
   },
   "engines": {
     "node": ">=18"

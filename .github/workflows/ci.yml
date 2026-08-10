@@ -22,3 +22,6 @@ jobs:
 
       - name: Check README links
         run: node index.js README.md
+
+      - name: Run unit tests
+        run: npm test
