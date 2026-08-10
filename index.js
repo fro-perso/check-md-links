@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile } from 'node:fs/promises';
+import { extractUrls } from './lib.js';
 
 const file = process.argv[2] ?? 'README.md';
 let markdown;
@@ -10,10 +11,7 @@ try {
   process.exit(1);
 }
 
-const urls = [...new Set(
-  [...markdown.matchAll(/https?:\/\/[^\s<>"']+/g)]
-    .map(([url]) => url.replace(/[\]),.;:!?]+$/, '')),
-)];
+const urls = extractUrls(markdown);
 
 console.log(`🔎 Vérification de ${urls.length} lien(s) dans ${file}\n`);
 let failures = 0;
