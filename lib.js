@@ -107,28 +107,74 @@ function withoutCode(markdown) {
     .join('');
 }
 
-function trimTrailingPunctuation(url) {
-  let result = url.replace(/[\],.;:!?]+$/, '');
+function markdownUrlAt(content, opening) {
+  let cursor = opening + 2;
+  while (/\s/.test(content[cursor] ?? '')) cursor += 1;
 
-  // A closing parenthesis belongs to an URL only when it has a matching opening
-  // parenthesis inside that URL (for example, Wikipedia article URLs).
-  while (result.endsWith(')')) {
-    const opening = [...result].filter((character) => character === '(').length;
-    const closing = [...result].filter((character) => character === ')').length;
-    if (closing <= opening) break;
-    result = result.slice(0, -1);
+  const angleDestination = content[cursor] === '<';
+  const start = cursor + Number(angleDestination);
+  let parentheses = 0;
+
+  for (let index = start; index < content.length; index += 1) {
+    const character = content[index];
+
+    if (angleDestination && character === '>') {
+      const url = content.slice(start, index);
+      return /^https?:\/\//.test(url)
+        ? { start, end: index, url }
+        : null;
+    }
+
+    if (!angleDestination && /\s/.test(character)) return null;
+    if (!angleDestination && character === '(') parentheses += 1;
+
+    if (!angleDestination && character === ')') {
+      if (parentheses === 0) {
+        const url = content.slice(start, index);
+        return /^https?:\/\//.test(url) ? { start, end: index, url } : null;
+      }
+      parentheses -= 1;
+    }
   }
 
-  return result;
+  return null;
+}
+
+function markdownUrls(content) {
+  const urls = [];
+
+  for (let opening = content.indexOf(']('); opening !== -1;) {
+    const url = markdownUrlAt(content, opening);
+    if (url) urls.push(url);
+    opening = content.indexOf('](', url?.end ?? opening + 2);
+  }
+
+  return urls;
+}
+
+function maskUrls(content, urls) {
+  let result = '';
+  let cursor = 0;
+
+  for (const { start, end } of urls) {
+    result += content.slice(cursor, start);
+    result += content.slice(start, end).replace(/[^\r\n]/g, ' ');
+    cursor = end;
+  }
+
+  return result + content.slice(cursor);
 }
 
 export function extractUrls(markdown) {
   const content = withoutCode(markdown);
-  const matches = content.matchAll(/https?:\/\/[^\s<>"']+/g);
+  const markdownMatches = markdownUrls(content);
+  const withoutMarkdownUrls = maskUrls(content, markdownMatches);
+  const matches = withoutMarkdownUrls.matchAll(/https?:\/\/[^\s<>"']+/g);
 
   return [...new Set(
-    [...matches]
-      .map(([url]) => trimTrailingPunctuation(url))
-      .filter(Boolean),
+    [
+      ...markdownMatches.map(({ url }) => url),
+      ...[...matches].map(([url]) => url),
+    ],
   )];
 }
