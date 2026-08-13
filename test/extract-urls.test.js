@@ -6,7 +6,7 @@ test('extracts Markdown, HTML, and plain-text URLs', () => {
   const markdown = [
     '[Example](https://example.com/docs)',
     '<a href="https://example.com/html">HTML</a>',
-    'Read https://example.com/plain.',
+    'Read https://example.com/plain',
   ].join('\n');
 
   assert.deepEqual(extractUrls(markdown), [
@@ -87,9 +87,40 @@ test('does not extend an unclosed code span beyond its paragraph', () => {
   assert.deepEqual(extractUrls(markdown), ['https://kept.example/']);
 });
 
-test('deduplicates URLs and removes terminal Markdown punctuation', () => {
+test('extracts Markdown destinations without their closing syntax', () => {
   assert.deepEqual(
-    extractUrls('https://example.com/path). https://example.com/path'),
+    extractUrls('[Example](https://example.com/path). [Again](https://example.com/path)'),
     ['https://example.com/path'],
+  );
+});
+
+test('extracts angle-bracket Markdown destinations', () => {
+  assert.deepEqual(
+    extractUrls('[IPv6](<http://[::1]>)'),
+    ['http://[::1]'],
+  );
+});
+
+test('keeps URLs from malformed Markdown links', () => {
+  assert.deepEqual(
+    extractUrls('Broken [link](https://example.com/unfinished'),
+    ['https://example.com/unfinished'],
+  );
+});
+
+test('preserves punctuation that is valid inside raw URLs', () => {
+  assert.deepEqual(
+    extractUrls([
+      'http://[::1]',
+      'https://example.com/path!',
+      'https://example.com/search?',
+      'https://example.com/segment;',
+    ].join('\n')),
+    [
+      'http://[::1]',
+      'https://example.com/path!',
+      'https://example.com/search?',
+      'https://example.com/segment;',
+    ],
   );
 });
