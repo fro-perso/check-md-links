@@ -2,7 +2,16 @@
 import { readFile } from 'node:fs/promises';
 import { extractUrls } from './lib.js';
 
-const file = process.argv[2] ?? 'README.md';
+const argument = process.argv[2];
+
+if (argument === '--help' || argument === '-h') {
+  console.log('Usage: check-md-links [fichier.md]');
+  console.log('Vérifie les liens HTTP et HTTPS présents dans un fichier Markdown.');
+  console.log('Si aucun fichier n’est indiqué, README.md est utilisé.');
+  process.exit(0);
+}
+
+const file = argument ?? 'README.md';
 let markdown;
 try {
   markdown = await readFile(file, 'utf8');
